@@ -1,0 +1,10 @@
+money,den'gy
+water,voda
+work,rabota
+number,chislo
+people,ludi
+oil,maslo
+day,den'
+part,chast'
+way,put'
+time,vremya
