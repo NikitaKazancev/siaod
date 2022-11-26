@@ -14,6 +14,8 @@
 
 using namespace std;
 
+int compares = 0;
+
 int randNum(int start = 0, int end = 9) {
 	if (start == end) return start;
 	return (rand() % abs(end - start + 1) + start);
@@ -132,10 +134,13 @@ public:
 		int key = getHash(englishWord);
 		Node* selNode;
 		for (int i = key; i < table.size(); i++) {
+			compares++;
 			selNode = &table[i];
 			if (selNode->isDeleted) continue;
+			compares++;
 			if (selNode->englishWord == englishWord) return selNode;
 		}
+		compares++;
 
 		return new Node("", -1);
 	}
@@ -181,8 +186,10 @@ private:
 		int res = 0;
 
 		for (int i = 0; i < englishWord.length(); i++) {
+			compares++;
 			res += (int) englishWord[i];
 		}
+		compares++;
 
 		return res % size;
 	}
@@ -249,7 +256,7 @@ public:
 	};
 };
 
-class File {
+struct File {
 	string path = "";
 	FILE* file;
 	HashTable* table = new HashTable();
@@ -343,38 +350,50 @@ int main() {
 	srand(time(0));
 
 	File file("test.bin");
-	file.push(FileNode("ourCoolTest1", "test"));
 
-	int amount;
-	char letter;
-	for (int i = 0; i < 10000; i++) {
-		string englishWord = "";
-		amount = randNum(3, 10);
-		for (int i = 0; i < amount; i++) {
-			englishWord += (char) randNum(97, 122);
-		}
-		file.push(FileNode(englishWord, "test"));
-		if (i == 5000) {
-			file.push(FileNode("ourCoolTest2", "test"));
-		}
+	for (int i = 0; i < 5000; i++) {
+		file.table->push(Node(to_string(i), i));
 	}
-	file.push(FileNode("ourCoolTest3", "test"));
 
-	searchTest(file, "ourCoolTest1");
-	searchTest(file, "ourCoolTest2");
-	searchTest(file, "ourCoolTest3");
+	chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
+	file.table->find("5000");
+	chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
 
-	// cout << ('k' + 'e' + 'y' + '2') % 11;
+	cout << chrono::duration_cast<chrono::nanoseconds>(t2 - t1).count() << endl;
+	cout << compares << endl;
 
-	file.push(FileNode("ab1", "znachenie1"));
-	file.push(FileNode("ba1", "znachenie2"));
-	file.push(FileNode("key2", "cluch2"));
+	// file.push(FileNode("ourCoolTest1", "test"));
 
-	file.remove("ba1");
-	file.find("key2").output();
+	// int amount;
+	// char letter;
+	// for (int i = 0; i < 10000; i++) {
+	// 	string englishWord = "";
+	// 	amount = randNum(3, 10);
+	// 	for (int i = 0; i < amount; i++) {
+	// 		englishWord += (char) randNum(97, 122);
+	// 	}
+	// 	file.push(FileNode(englishWord, "test"));
+	// 	if (i == 5000) {
+	// 		file.push(FileNode("ourCoolTest2", "test"));
+	// 	}
+	// }
+	// file.push(FileNode("ourCoolTest3", "test"));
 
-	file.output();
-	file.outputTable();
+	// searchTest(file, "ourCoolTest1");
+	// searchTest(file, "ourCoolTest2");
+	// searchTest(file, "ourCoolTest3");
+
+	// // cout << ('k' + 'e' + 'y' + '2') % 11;
+
+	// file.push(FileNode("ab1", "znachenie1"));
+	// file.push(FileNode("ba1", "znachenie2"));
+	// file.push(FileNode("key2", "cluch2"));
+
+	// file.remove("ba1");
+	// file.find("key2").output();
+
+	// file.output();
+	// file.outputTable();
 
 	// file.push(FileNode("key3", "cluch3"));
 	// file.push(FileNode("key4", "cluch4"));

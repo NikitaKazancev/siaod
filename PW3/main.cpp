@@ -77,7 +77,7 @@ void showMatrixReverse(vector<vector<char>> matrix, char separator = ' ') {
 	for (int i = matrix[0].size() - 1; i >= 0; i--) {
 		for (int j = 0; j < matrix.size(); j++) {
 			if (matrix[j][i] == separator) {
-				cout << "   ";
+				cout << "\t";
 			} else {
 				cout << matrix[j][i];
 			}
